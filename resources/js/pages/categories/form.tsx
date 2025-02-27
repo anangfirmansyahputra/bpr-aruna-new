@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { useAction } from '@/hooks/use-action';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, Category } from '@/types';
+import { Head } from '@inertiajs/react';
 
 interface Props {
   category?: Category;
@@ -37,6 +38,7 @@ export default function Form({ category }: Props) {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
+      <Head title="Kategori" />
       <div className="container mx-auto px-4 py-6">
         <Heading title="Kategori" description="Manage kategori kalian" />
 
