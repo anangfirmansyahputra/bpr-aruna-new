@@ -32,9 +32,44 @@ class CategoryController extends Controller
                 'name' => $request->name
             ]);
 
+            return redirect()->route('categories.index')->with('success', 'Kategori berhasil dibuat');
+        } catch (\Exception $e) {
+            return back()->withErrors(['name' => 'Gagal membuat kategori. Mungkin ada nama category yang sama']);
+        }
+    }
+
+    public function edit(string $id)
+    {
+        $category = Category::findOrFail($id);
+
+        return Inertia::render('categories/form', [
+            'category' => $category
+        ]);
+    }
+
+    public function update(Request $request, string $id)
+    {
+        $category = Category::findOrFail($id);
+
+        $validate = $request->validate([
+            'name' => "required|min:3|unique:categories,name,{$id}"
+        ]);
+
+        try {
+            $category->update([
+                'name' => $request->name
+            ]);
+
             return to_route('categories.index');
         } catch (\Exception $e) {
-            return back()->withErrors(['name' => 'Failed to create category. It might already exist.']);
+            return back()->withErrors(['name' => 'Failed to update category']);
         }
+    }
+
+    public function destroy(string $id)
+    {
+        $category = Category::findOrFail($id);
+        $category->delete();
+        return redirect()->route('categories.index')->with('success', 'Delete category berhasil');
     }
 }
