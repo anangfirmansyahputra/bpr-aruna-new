@@ -15,7 +15,7 @@ type ColumnConfig<T> = {
 };
 
 // Function untuk membuat columns secara fleksibel
-export function getColumns<T extends { id: string | number }>(
+export function getColumns<T extends Record<string, any>>(
   columnsConfig: ColumnConfig<T>[],
   basePath: string, // Path untuk edit
   onDelete: (id: string | number) => void,
@@ -47,6 +47,20 @@ export function getColumns<T extends { id: string | number }>(
         ) : (
           label
         ),
+      cell: ({ row }: any) => {
+        const value = row.original[key];
+
+        // Jika value adalah objek (relasi), coba tampilkan `name` atau `title`
+        if (typeof value === 'object' && value !== null) {
+          return value.name || value.title || JSON.stringify(value);
+        }
+
+        if (typeof value === 'string' && /\.(jpeg|jpg|gif|png|webp)$/i.test(value)) {
+          return <img src={value} alt={label} className="h-12 w-12 rounded-md object-cover shadow-sm" />;
+        }
+
+        return value ?? '-';
+      },
     })),
     // Actions (Edit & Delete)
     {

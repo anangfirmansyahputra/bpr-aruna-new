@@ -10,6 +10,7 @@ import {
 import { NavGroupItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { ChevronRight } from 'lucide-react';
+import { useState } from 'react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
 
 interface Props {
@@ -18,52 +19,54 @@ interface Props {
 
 export function NavMain({ items = [] }: Props) {
   const page = usePage();
+  const [openGroup, setOpenGroup] = useState<string | null>(null);
+
   return (
     <SidebarGroup className="space-y-2 px-2 py-4">
-      {/* {items.map((item) => (
-        <>
-          <SidebarGroupLabel>{item.group}</SidebarGroupLabel> */}
       <SidebarMenu>
-        {items.map((item) => (
-          <Collapsible defaultOpen={page.url.includes(item.children[0].url)} key={item.group} asChild className="group/collapsible">
-            <SidebarMenuItem>
-              <CollapsibleTrigger asChild>
-                <SidebarMenuButton>
-                  <item.icon />
-                  <span>{item.group}</span>
-                  <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                </SidebarMenuButton>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <SidebarMenuSub>
-                  {item.children.map((subItem) => (
-                    <SidebarMenuSubItem key={subItem.title}>
-                      <SidebarMenuSubButton isActive={page.url.includes(subItem.url)} asChild>
-                        <Link href={subItem.url}>
-                          <span>{subItem.title}</span>
-                        </Link>
-                      </SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
-                  ))}
-                </SidebarMenuSub>
-              </CollapsibleContent>
-            </SidebarMenuItem>
-          </Collapsible>
-        ))}
+        {items.map((item) => {
+          const isOpen = openGroup === item.group || item.children.some((child) => page.url.includes(child.url));
 
-        {/* {item.children.map((child) => (
-              <SidebarMenuItem key={child.title}>
-                <SidebarMenuButton asChild isActive={child.url === page.url}>
-                  <Link href={child.url} prefetch>
-                    {child.icon && <child.icon />}
-                    <span>{child.title}</span>
-                  </Link>
-                </SidebarMenuButton>
+          return (
+            <Collapsible
+              open={isOpen}
+              key={item.group}
+              asChild
+              className="group/collapsible"
+              onOpenChange={(open) => {
+                if (open || item.children.some((child) => page.url.includes(child.url))) {
+                  setOpenGroup(item.group);
+                } else {
+                  setOpenGroup(null);
+                }
+              }}
+            >
+              <SidebarMenuItem>
+                <CollapsibleTrigger asChild>
+                  <SidebarMenuButton>
+                    <span>{item.group}</span>
+                    <ChevronRight className={`ml-auto transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}`} />
+                  </SidebarMenuButton>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <SidebarMenuSub>
+                    {item.children.map((subItem, i) => (
+                      <SidebarMenuSubItem key={i}>
+                        <SidebarMenuSubButton asChild isActive={page.url.includes(subItem.url)}>
+                          <Link href={subItem.url} onClick={() => setOpenGroup(item.group)}>
+                            {subItem.icon && <subItem.icon />}
+                            <span>{subItem.title}</span>
+                          </Link>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                    ))}
+                  </SidebarMenuSub>
+                </CollapsibleContent>
               </SidebarMenuItem>
-            ))} */}
+            </Collapsible>
+          );
+        })}
       </SidebarMenu>
-      {/* </> */}
-      {/* ))} */}
     </SidebarGroup>
   );
 }

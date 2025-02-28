@@ -13,7 +13,7 @@ const breadcrumbs: BreadcrumbItem[] = [
   },
   {
     title: 'Kategori',
-    href: '/categories',
+    href: '/dashboard/categories',
   },
 ];
 
@@ -37,7 +37,7 @@ export default function CategoryPage({ categories }: Props) {
         sortable: true,
       },
     ],
-    '/categories',
+    '/dashboard/categories',
     destroy,
   );
 

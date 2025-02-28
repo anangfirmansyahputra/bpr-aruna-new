@@ -38,12 +38,12 @@ const navMainItems: NavGroupItem[] = [
     children: [
       {
         title: 'Kategori',
-        url: '/categories',
+        url: '/dashboard/categories',
         icon: ChartBarStacked,
       },
       {
-        title: 'Produk',
-        url: '/product',
+        title: 'Product',
+        url: '/dashboard/products',
         icon: ShoppingCart,
       },
     ],

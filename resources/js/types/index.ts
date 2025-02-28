@@ -51,3 +51,14 @@ export interface Category {
   created_at: string;
   updated_at: string;
 }
+
+export interface Product {
+  id: number;
+  name: string;
+  category_id: number;
+  image_url: string;
+  is_credit: boolean;
+  calculator_name: string;
+  created_at: string;
+  updated_at: string;
+}

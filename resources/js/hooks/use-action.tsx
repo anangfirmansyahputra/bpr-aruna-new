@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useForm } from '@inertiajs/react';
+import { router, useForm } from '@inertiajs/react';
 import toast from 'react-hot-toast';
 
 interface UseActionProps<T extends Record<string, any>> {
@@ -9,20 +9,39 @@ interface UseActionProps<T extends Record<string, any>> {
 }
 
 export function useAction<T extends Record<string, any>>({ initialData, itemId, routeName }: UseActionProps<T>) {
-  const { data, setData, post, put, errors, processing } = useForm(initialData);
+  const { data, setData, errors, processing, post } = useForm(initialData);
 
   const submit = () => {
+    const formData = new FormData();
+
+    Object.keys(data).forEach((key) => {
+      if (data[key] instanceof File) {
+        formData.append(key, data[key]); // Jika file, tambahkan ke FormData
+      } else {
+        formData.append(key, data[key] as string); // Jika bukan file, tambahkan sebagai string
+      }
+    });
+
     if (itemId) {
-      put(route(`${routeName}.update`, itemId), {
+      formData.append('_method', 'PUT');
+
+      router.visit(route(`${routeName}.update`, itemId), {
+        method: 'post', // HARUS 'POST', karena 'PUT' tidak mendukung FormData
+        data: formData,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
         preserveScroll: true,
         onSuccess: (page: { props: any }) => {
-          if (page.props.flash?.success) {
-            toast.success(page.props.flash.success);
+          const flash = page.props?.flash;
+          if (flash?.success) {
+            toast.success(flash.success);
           }
         },
         onError: (page: any) => {
-          if (page.props.flash?.error) {
-            toast.error(page.props.flash.error);
+          const flash = page.props?.flash;
+          if (flash?.error) {
+            toast.error(flash.error);
           }
         },
       });
@@ -30,13 +49,15 @@ export function useAction<T extends Record<string, any>>({ initialData, itemId, 
       post(route(`${routeName}.store`), {
         preserveScroll: true,
         onSuccess: (page: { props: any }) => {
-          if (page.props.flash?.success) {
-            toast.success(page.props.flash.success);
+          const flash = page.props?.flash;
+          if (flash?.success) {
+            toast.success(flash.success);
           }
         },
         onError: (page: any) => {
-          if (page.props.flash?.error) {
-            toast.error(page.props.flash.error);
+          const flash = page.props?.flash;
+          if (flash?.error) {
+            toast.error(flash.error);
           }
         },
       });

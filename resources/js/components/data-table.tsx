@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import {
@@ -20,8 +21,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Link } from '@inertiajs/react';
 import { useState } from 'react';
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+interface DataTableProps<TData> {
+  columns: ColumnDef<TData, any>[];
   data: TData[];
   name: string;
   filter: string;
@@ -29,7 +30,7 @@ interface DataTableProps<TData, TValue> {
   filterTitle: string;
 }
 
-export function DataTable<TData, TValue>({ columns, data, name, filter, url, filterTitle }: DataTableProps<TData, TValue>) {
+export function DataTable<TData>({ columns, data, name, filter, url, filterTitle }: DataTableProps<TData>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
@@ -89,9 +90,9 @@ export function DataTable<TData, TValue>({ columns, data, name, filter, url, fil
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button>
-            <Link href={url}>Add {name}</Link>
-          </Button>
+          <Link href={url} className="cursor-pointer">
+            <Button className="cursor-pointer">Add {name}</Button>
+          </Link>
         </div>
       </div>
       <div className="rounded-md border">

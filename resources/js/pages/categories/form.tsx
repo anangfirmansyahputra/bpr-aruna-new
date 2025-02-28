@@ -21,7 +21,7 @@ export default function Form({ category }: Props) {
     },
     {
       title: 'Kategori',
-      href: '/categories',
+      href: '/dashboard/categories',
     },
     {
       title: category ? 'Update' : 'Create',
@@ -34,6 +34,7 @@ export default function Form({ category }: Props) {
       name: category ? category.name : '',
     },
     routeName: 'categories',
+    itemId: category?.id,
   });
 
   return (

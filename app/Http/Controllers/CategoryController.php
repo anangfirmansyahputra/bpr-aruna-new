@@ -60,7 +60,7 @@ class CategoryController extends Controller
                 'name' => $request->name
             ]);
 
-            return to_route('categories.index');
+            return redirect()->route('categories.index')->with('success', 'Kategori berhasil diupdate');
         } catch (\Exception $e) {
             return back()->withErrors(['name' => 'Failed to update category']);
         }
