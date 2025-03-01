@@ -9,16 +9,16 @@ interface UseActionProps<T extends Record<string, any>> {
 }
 
 export function useAction<T extends Record<string, any>>({ initialData, itemId, routeName }: UseActionProps<T>) {
-  const { data, setData, errors, processing, post } = useForm(initialData);
+  const { data, setData, errors,setError, processing, post } = useForm(initialData);
 
   const submit = () => {
     const formData = new FormData();
 
     Object.keys(data).forEach((key) => {
       if (data[key] instanceof File) {
-        formData.append(key, data[key]); // Jika file, tambahkan ke FormData
+        formData.append(key, data[key]); 
       } else {
-        formData.append(key, data[key] as string); // Jika bukan file, tambahkan sebagai string
+        formData.append(key, data[key] as string);
       }
     });
 
@@ -26,20 +26,25 @@ export function useAction<T extends Record<string, any>>({ initialData, itemId, 
       formData.append('_method', 'PUT');
 
       router.visit(route(`${routeName}.update`, itemId), {
-        method: 'post', // HARUS 'POST', karena 'PUT' tidak mendukung FormData
+        method: 'post',
         data: formData,
         headers: {
           'Content-Type': 'multipart/form-data',
         },
         preserveScroll: true,
+        preserveState: true,
         onSuccess: (page: { props: any }) => {
           const flash = page.props?.flash;
           if (flash?.success) {
             toast.success(flash.success);
           }
         },
-        onError: (page: any) => {
-          const flash = page.props?.flash;
+        onError: (errors: any) => {
+          Object.entries(errors).forEach(([field, message]) => {
+            setError(field, message as string);
+          });
+          
+          const flash = errors.props?.flash;
           if (flash?.error) {
             toast.error(flash.error);
           }
