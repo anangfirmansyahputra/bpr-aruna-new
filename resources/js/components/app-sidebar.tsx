@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { NavGroupItem, type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, ChartBarStacked, Folder, Home, LayoutGrid, ShoppingCart } from 'lucide-react';
+import { BookOpen, ChartBarStacked, Folder, Home, LayoutGrid, Newspaper, ShoppingCart } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const footerNavItems: NavItem[] = [
@@ -45,6 +45,17 @@ const navMainItems: NavGroupItem[] = [
         title: 'Product',
         url: '/dashboard/products',
         icon: ShoppingCart,
+      },
+    ],
+  },
+  {
+    group: 'News',
+    icon: ShoppingCart,
+    children: [
+      {
+        title: 'Berita',
+        url: '/dashboard/news',
+        icon: Newspaper,
       },
     ],
   },

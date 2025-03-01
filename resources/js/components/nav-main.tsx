@@ -53,7 +53,7 @@ export function NavMain({ items = [] }: Props) {
                     {item.children.map((subItem, i) => (
                       <SidebarMenuSubItem key={i}>
                         <SidebarMenuSubButton asChild isActive={page.url.includes(subItem.url)}>
-                          <Link href={subItem.url} onClick={() => setOpenGroup(item.group)}>
+                          <Link preserveState={true} href={subItem.url} onClick={() => setOpenGroup(item.group)}>
                             {subItem.icon && <subItem.icon />}
                             <span>{subItem.title}</span>
                           </Link>
