@@ -1,13 +1,7 @@
+import CustomForm from '@/components/custom-form';
 import Heading from '@/components/heading';
-import InputError from '@/components/input-error';
-import ConfirmModal from '@/components/modal/confirm-modal';
-import { Button } from '@/components/ui/button';
-import FileUpload from '@/components/ui/file-upload';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { Switch } from '@/components/ui/switch';
 import { useAction } from '@/hooks/use-action';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, Category, Product } from '@/types';
@@ -32,7 +26,7 @@ interface Input {
 }
 
 export default function Form({ product, categories }: Props) {
-  const { data, setData, errors, processing, submit } = useAction({
+  const form = useAction({
     initialData: product ?? {
       name: '',
       calculator_name: '',
@@ -110,63 +104,7 @@ export default function Form({ product, categories }: Props) {
         <Heading title="Produk" description="Manage produk kalian" />
         <div className="flex-1 lg:max-w-2xl">
           <Separator className="mt-5 mb-8" />
-          <form className="space-y-8">
-            {inputs.map((input) => (
-              <div className="grid gap-2" key={input.name}>
-                {input.type !== 'toggle' && <Label htmlFor={input.name}>{input.label}</Label>}
-
-                {input.type === 'text' ? (
-                  <Input
-                    disabled={processing}
-                    id={input.name}
-                    name={input.name}
-                    className="mt-1 block w-full"
-                    value={data[input.name] as string | number}
-                    onChange={(e) => setData(input.name, e.target.value)}
-                    required={input.required ?? false}
-                    // autoComplete="name"
-                    placeholder={input.placeholder}
-                  />
-                ) : input.type === 'select' ? (
-                  <Select value={(data[input.name] as number).toString()} onValueChange={(value) => setData(input.name, value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder={input.placeholder} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {input.options?.map((item) => (
-                        <SelectItem key={item.id} value={item.id.toString()}>
-                          {item.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                ) : input.type === 'file' ? (
-                  <FileUpload
-                    onChange={(e) => setData(input.name, e ?? '')}
-                    value={data[input.name] as string | File}
-                    disabled={processing}
-                    className="mt-1"
-                  />
-                ) : input.type === 'toggle' ? (
-                  <div className="flex flex-row items-center justify-between rounded-lg border p-4">
-                    <div className="space-y-0.5">
-                      <Label>{input.label}</Label>
-                      {input.helperText && <p className="text-muted-foreground text-[0.8rem]">{input.helperText}</p>}
-                    </div>
-                    <Switch checked={data[input.name] as boolean} onCheckedChange={(value) => setData(input.name, value)} aria-readonly />
-                  </div>
-                ) : null}
-
-                {input.description && <p className="text-muted-foreground text-[0.8rem]">{input.description}</p>}
-
-                <InputError className="mt-2" message={errors.name} />
-              </div>
-            ))}
-
-            <ConfirmModal onClick={submit}>
-              <Button>Submit</Button>
-            </ConfirmModal>
-          </form>
+          <CustomForm inputs={inputs} {...form} />
         </div>
       </div>
     </AppLayout>

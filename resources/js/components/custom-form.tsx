@@ -93,11 +93,13 @@ export default function CustomForm({ inputs, processing, data, errors, setData, 
         </div>
       ))}
 
-      <ConfirmModal onClick={() => !processing && submit()}>
-        <Button disabled={processing} className="w-fit">
-          Submit
-        </Button>
-      </ConfirmModal>
+      <div className="col-span-2">
+        <ConfirmModal onClick={() => !processing && submit()}>
+          <Button disabled={processing} className="w-fit">
+            Submit
+          </Button>
+        </ConfirmModal>
+      </div>
     </form>
   );
 }
