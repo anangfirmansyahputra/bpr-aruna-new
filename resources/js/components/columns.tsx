@@ -5,16 +5,14 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Link } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, MoreHorizontal, Trash } from 'lucide-react';
+import { ArrowUpDown, Download, MoreHorizontal, Trash } from 'lucide-react';
 
-// Tipe data untuk konfigurasi kolom
 type ColumnConfig<T> = {
-  key: keyof T; // Key dari objek data
-  label: string; // Nama yang ditampilkan di tabel
-  sortable?: boolean; // Bisa di-sort atau tidak
+  key: keyof T;
+  label: string;
+  sortable?: boolean;
 };
 
-// Function untuk membuat columns secara fleksibel
 export function getColumns<T extends Record<string, any>>(
   columnsConfig: ColumnConfig<T>[],
   basePath: string, // Path untuk edit
@@ -55,8 +53,21 @@ export function getColumns<T extends Record<string, any>>(
           return value.name || value.title || JSON.stringify(value);
         }
 
+        // Jika value adalah URL gambar, tampilkan preview
         if (typeof value === 'string' && /\.(jpeg|jpg|gif|png|webp)$/i.test(value)) {
           return <img src={value} alt={label} className="h-12 w-12 rounded-md object-cover shadow-sm" />;
+        }
+
+        // Jika key adalah 'file', tampilkan tombol download
+        if (key === 'file' && typeof value === 'string' && value) {
+          return (
+            <a href={value} download className="inline-flex items-center gap-2">
+              <Button variant="outline" size="sm">
+                Download
+                <Download className="ml-1 h-4 w-4" />
+              </Button>
+            </a>
+          );
         }
 
         return value ?? '-';

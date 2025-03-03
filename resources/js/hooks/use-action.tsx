@@ -25,6 +25,8 @@ export function useAction<T extends Record<string, any>>({ initialData, itemId, 
     if (itemId) {
       formData.append('_method', 'PUT');
 
+      console.log(formData.get('content'));
+
       router.visit(route(`${routeName}.update`, itemId), {
         method: 'post',
         data: formData,

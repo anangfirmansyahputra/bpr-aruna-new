@@ -58,6 +58,7 @@ export default function CustomForm({ inputs, processing, data, errors, setData, 
             </Select>
           ) : input.type === 'file' ? (
             <FileUpload
+              accept={input.accept}
               onChange={(e) => setData(input.name, e ?? '')}
               value={data[input.name] as string | File}
               disabled={input.disabled || processing}

@@ -18,8 +18,11 @@ const FileUpload = ({
   accept = "image/*"
 }: FileUploadProps) => {
   const [isDragging, setIsDragging] = useState(false);
+  const [fileName, setFileName] = useState<string | null>(
+    typeof value === 'string' ? value.split('/').pop() ?? null : null
+  );
   const [preview, setPreview] = useState<string | null>(
-    typeof value === 'string' ? value : null
+    typeof value === 'string' && accept.startsWith('image/') ? value : null
   );
 
   const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
@@ -46,8 +49,8 @@ const FileUpload = ({
     const file = e.dataTransfer.files?.[0];
     if (file) {
       onChange(file);
-      
-      // Create preview for image files
+      setFileName(file.name);
+
       if (file.type.startsWith('image/')) {
         const reader = new FileReader();
         reader.onload = () => {
@@ -63,7 +66,8 @@ const FileUpload = ({
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     onChange(file);
-    
+    setFileName(file ? file.name : null);
+
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader();
       reader.onload = () => {
@@ -77,6 +81,7 @@ const FileUpload = ({
 
   const handleRemove = useCallback(() => {
     onChange(null);
+    setFileName(null);
     setPreview(null);
   }, [onChange]);
 
@@ -104,7 +109,7 @@ const FileUpload = ({
           htmlFor="fileUpload"
           className="w-full h-full flex flex-col items-center justify-center cursor-pointer"
         >
-          {preview ? (
+          {preview && accept.startsWith('image/') ? (
             <div className="relative w-full flex flex-col items-center">
               <img 
                 src={preview} 
@@ -112,6 +117,8 @@ const FileUpload = ({
                 className="max-h-[200px] object-contain rounded-md"
               />
             </div>
+          ) : fileName ? (
+            <p className="text-sm font-medium text-center">{fileName}</p>
           ) : (
             <>
               <UploadIcon className="h-10 w-10 text-muted-foreground mb-2" />
@@ -119,14 +126,14 @@ const FileUpload = ({
                 Drag & drop file here, or click to select
               </p>
               <p className="text-xs text-muted-foreground mt-1">
-                Supports images (JPG, PNG, GIF)
+                {accept.startsWith('image/') ? "Supports images (JPG, PNG, GIF)" : "Supports PDFs"}
               </p>
             </>
           )}
         </label>
       </div>
       
-      {(typeof value === 'string' && value || preview) && (
+      {fileName && (
         <button
           onClick={handleRemove}
           type="button"

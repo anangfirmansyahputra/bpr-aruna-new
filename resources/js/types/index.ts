@@ -56,6 +56,7 @@ export interface InputName<T> {
   helperText?: string;
   col?: number;
   disabled?: boolean;
+  accept?: string;
 }
 
 export interface Category {
@@ -84,6 +85,14 @@ export interface News {
   keywords: string[];
   meta_description: string;
   content: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Report {
+  id: number;
+  title: string;
+  file: string;
   created_at: string;
   updated_at: string;
 }

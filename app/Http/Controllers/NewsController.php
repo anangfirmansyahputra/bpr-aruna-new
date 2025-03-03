@@ -34,15 +34,17 @@ class NewsController extends Controller
      */
     public function store(Request $request)
     {
+
         $validate = $request->validate([
             'title' => 'required|string|unique:news,title',
             'meta_description' => 'required|string',
             'keywords' => 'required|string',
             'content' => 'required|string',
-            'image_url' => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'image_url' => 'required|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
         ]);
-
         try {
+
+
             $imagePath = $request->file('image_url')->store('news', 'public');
 
             News::create([
@@ -93,7 +95,7 @@ class NewsController extends Controller
                 'nullable',
                 Rule::when(
                     $request->hasFile('image_url'),
-                    ['image', 'mimes:jpg,jpeg,png,gif', 'max:2048'],
+                    ['image', 'mimes:jpg,jpeg,png,gif,webp', 'max:2048'],
                     ['string', 'url']
                 )
             ]

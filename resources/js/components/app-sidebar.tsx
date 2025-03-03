@@ -4,8 +4,8 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { NavGroupItem, type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, ChartBarStacked, Folder, Home, LayoutGrid, Newspaper, ShoppingCart } from 'lucide-react';
-import AppLogo from './app-logo';
+import { BookOpen, ChartBarStacked, Folder, Home, LayoutGrid, Newspaper, ReceiptPoundSterling, ShoppingCart } from 'lucide-react';
+import logo from '../../../public/assets/logo.png';
 
 const footerNavItems: NavItem[] = [
   {
@@ -57,19 +57,24 @@ const navMainItems: NavGroupItem[] = [
         url: '/dashboard/news',
         icon: Newspaper,
       },
+      {
+        title: 'Laporan Keuangan',
+        url: '/dashboard/reports',
+        icon: ReceiptPoundSterling,
+      },
     ],
   },
 ];
 
 export function AppSidebar() {
   return (
-    <Sidebar collapsible="icon" variant="inset">
+    <Sidebar collapsible="icon" variant="sidebar">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="/dashboard" prefetch>
-                <AppLogo />
+                <img src={logo} className="mx-auto" />
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
